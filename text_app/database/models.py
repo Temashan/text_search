@@ -7,7 +7,7 @@ metadata = MetaData()
 docs = Table(
     "docs",
     metadata,
-    Column("id", Integer, nullable=False, autoincrement=True),
+    Column("id", Integer, nullable=False, autoincrement=True, primary_key=True),
     Column("rubrics", String(45), nullable=False),
     Column("texts", Text, nullable=False),
     Column("created_date", Date, nullable=False)
