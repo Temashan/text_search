@@ -3,36 +3,34 @@ from datetime import datetime
 from fastapi import FastAPI
 from pydantic import BaseModel
 from pages.router import router as router_pages
+from database import connection
 
 app = FastAPI(
     title="Text search app"
 )
 
-doc = [
-    {'id': 1, 'rubrics': 'sport', 'text': 'Messi is going to play in the USA', 'created_date': '2023-06-09'},
-    {'id': 2, 'rubrics': 'news', 'text': 'Fire was in Minsk', 'created_date': '2023-06-09' },
-    {'id': 3, 'rubrics': 'about animals', 'text': 'Bear was seen in Molodechno', 'created_date': '2023-06-09'},
-    {'id': 4, 'rubrics': 'politics', 'text': 'Trump is running for president', 'created_date': '2023-06-09'},
-    {'id': 5, 'rubrics': 'economics', 'text': 'Belarusian economy has fallen over the past 2 month', 'created_date': '2023-06-08'},
-    {'id': 6, 'rubrics': 'technologies', 'text': 'Good apple presentation was 2 days ago', 'created_date': '2023-06-08'},
-    {'id': 7, 'rubrics': 'cars', 'text': 'New electro BMW7 comes to Belarus', 'created_date': '2023-06-08'}
-]
+@app.get("/texts")
+def get_text():
+    db_connection = connection.create_connection()
+    cursor = db_connection.cursor()
 
-@app.get("/")
-def text():
-    return doc
+    cursor.execute("SELECT * FROM docs")
+    result = cursor.fetchall()
 
+    # Формируем список словарей с результатами
+    docs = []
+    for row in result:
+        user = {
+            "id": row[0],
+            "rubrics": row[1],
+            "texts": row[2],
+            "created_date": row[3]
+        }
+        docs.append(user)
 
-@app.get("/doc/{text}")
-def find_text(text: str):
-    return [doc for doc in doc if text in doc["text"]]
+    cursor.close()
+    db_connection.close()
 
-class Text(BaseModel):
-    id: int
-    rubrics: str
-    text: str
-    created_date: datetime
-
-app.include_router(router_pages)
+    return {"docs": docs}
 
 

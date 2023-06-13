@@ -1,9 +1,22 @@
 version: '3.9'
 
 services:
+
   web:
     build: .
     volumes:
       - .:/app
     ports:
       - "8000:8000"
+
+  mysql:
+    container_name: mysql
+    platform: windows/x86_64
+    build: ./mysql/
+    ports:
+      - "3306:3306"
+    volumes:
+      -
+    env_file:
+      - ./mysql/local.env
+    tty: true
