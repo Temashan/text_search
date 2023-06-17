@@ -6,8 +6,9 @@ router = APIRouter(
     tags=["Pages"]
 )
 
-templates = Jinja2Templates(directory="templates")
 
-@router.get("/layout")
-def get_layout_page(request: Request):
-    return templates.TemplateResponse("layout.html", {"request": request})
+# @router.get("/layout")
+# def get_layout_page(request: Request):
+#     templates = Jinja2Templates(directory="templates")
+#     return templates.TemplateResponse("layout.html", {"request": request})
+#
