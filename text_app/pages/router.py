@@ -7,8 +7,3 @@ router = APIRouter(
 )
 
 
-# @router.get("/layout")
-# def get_layout_page(request: Request):
-#     templates = Jinja2Templates(directory="templates")
-#     return templates.TemplateResponse("layout.html", {"request": request})
-#

@@ -3,10 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <title>Text searcher</title>
-    <link rel="shortcut icon" href="D:\Modsen\text_search\text_app\static\text_app\img\loop.png" type="image/x-icon">
-    <link rel="stylesheet" href="layout.html">
+    <link rel="stylesheet" href="text_app/static/text_app/css/main.css">
+    <link rel="shortcut icon" href="D:\Modsen\text_search\text_app\static\text_app\img\loop.png" type="image/png">
+    <style>
+        body{
+            background: linear-gradient(45deg, rgb(152, 207, 195), rgb(26, 164, 168));
+        }
+        img.loop{
+            position: absolute;
+            left: 20px;
+            top: 20px;
+        }
+        p{
+             text-align: center;
+        }
+        button{
+            text-align: center;
+        }
+        button {
+	        height: 50px;
+            position: center;
+            /*border: 1px solid white;*/
+}
+    </style>
 </head>
 <body>
+<!--    <img src="D:\Modsen\text_search\text_app\templates\text_app\loop.png" width="75" height="75" class="loop">-->
+<div class="message"></div>
+     <p>
+        Введите рубрику: <br />
+        <input name="rubrics" id="rubrics" size="70"/>
+    </p>
+     <p>
+        Введите текст: <br />
+        <input name="texts" id="texts" size="70"/>
+    </p>
+    <p>
+        Введите дату: <br />
+        <input name="created_date" id="created_date" type="date" size="70" />
+    </p>
+    <button onclick="send()">Отправить</button>
+    <script>
+    async function send(){
 
+        // получаем введеное в поле рубрики и текст
+        const rubrics = document.getElementById("rubrics").value;
+        const texts = document.getElementById("texts").value;
+        const created_date = document.getElementById("created_date").value;
+
+        // отправляем запрос
+        const response = await fetch("/hello", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    rubrics: rubrics,
+                    texts: texts,
+                    created_date: created_date
+                })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById("message").textContent = data.message;
+            }
+            else
+                console.log(response);
+    }
+</script>
 </body>
 </html>

@@ -3,6 +3,7 @@ from sqlalchemy import Integer, String, Date, Text
 from sqlalchemy.ext.declarative import declarative_base
 
 
+
 Base = declarative_base()
 
 class docs(Base):
@@ -14,3 +15,5 @@ class docs(Base):
     created_date = Column(Date, nullable=False)
 
 metadata = Base.metadata
+
+
