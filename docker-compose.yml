@@ -1,22 +1,42 @@
-version: '3.9'
-
+version: "3.9"
 services:
-
   web:
     build: .
     volumes:
-      - .:/app
+      - .:/code
     ports:
       - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - mysql-db
 
-  mysql:
-    container_name: mysql
-    platform: windows/x86_64
-    build: ./mysql/
+  elastic:
+    container_name: elastic
+    image: elasticsearch:8.8.1
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+    ports:
+      - "9200:9200"
+
+  kibana:
+    container_name: kibana
+    image: kibana:8.8.1
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elastic:9200
+    depends_on:
+      - elastic
+    ports:
+      - "5601:5601"
+
+  mysql-db:
+    image: mysql:latest
+    container_name: mysql-db
+    environment:
+      - MYSQL_DATABASE=texts
+      - MYSQL_ROOT_PASSWORD=Temashan2002
+    env_file:
+      - .env
     ports:
       - "3306:3306"
-    volumes:
-      -
-    env_file:
-      - ./mysql/local.env
-    tty: true
