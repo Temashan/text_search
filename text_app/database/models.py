@@ -5,6 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class docs(Base):
     __tablename__ = "textsearch"
 
