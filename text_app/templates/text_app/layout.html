@@ -3,10 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <title>Text searcher</title>
-    <link rel="shortcut icon" href="D:\Modsen\text_search\text_app\static\text_app\img\loop.png" type="image/x-icon">
-    <link rel="stylesheet" href="layout.html">
+    <link rel="shortcut icon" href="D:\Modsen\text_search\text_app\static\text_app\img\loop.png" type="image/png">
+    <style>
+        body{
+            background: linear-gradient(45deg, rgb(152, 207, 195), rgb(26, 164, 168));
+        }
+        img.loop{
+            position: absolute;
+            left: 20px;
+            top: 20px;
+        }
+        p{
+             text-align: center;
+        }
+        button{
+            text-align: center;
+        }
+        button {
+	        height: 50px;
+            position: center;
+            /*border: 1px solid white;*/
+}
+    </style>
 </head>
 <body>
+<div class="message"></div>
+     <p>
+        Введите рубрику: <br />
+        <input name="rubrics" id="rubrics" size="70"/>
+    </p>
+     <p>
+        Введите текст: <br />
+        <input name="texts" id="texts" size="70"/>
+    </p>
+    <p>
+        Введите дату: <br />
+        <input name="created_date" id="created_date" type="date" size="70" />
+    </p>
+    <p>
+        Введите id: <br />
+        <input name="id" id="id" size="70"/>
+    </p>
+    <button onclick="send()">Отправить</button>
+    <button onclick="search()">Вывод документов</button><br>
+    <button onclick="deleteUser()">Удаление документа</button><br>
+    <div id="result"></div>
 
+    <script>
+    async function send(){
+
+        const rubrics = document.getElementById("rubrics").value;
+        const texts = document.getElementById("texts").value;
+        const created_date = document.getElementById("created_date").value;
+
+        const response = await fetch("/hello", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    rubrics: rubrics,
+                    texts: texts,
+                    created_date: created_date
+                })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById("result").textContent = data.message;
+            }
+            else
+                console.log(response);
+    }
+
+    async function search() {
+
+        const response = await fetch("docs/alltexts", {
+            method: "GET",
+            headers: {"Accept": "application/json"}
+        });
+        if (response.ok) {
+            const data = await response.json();
+            const resultsElement = document.getElementById("result");
+
+            resultsElement.innerHTML = "";
+
+            data.forEach((doc) => {
+                const docElement = document.createElement("div");
+                docElement.innerHTML =
+                    `<p>id: ${doc.id}</p>
+                    <p>rubrics: ${doc.rubrics}</p>
+                    <p>texts: ${doc.texts}</p>
+                    <p>created date: ${doc.created_date}</p><br>`;
+                resultsElement.appendChild(docElement);
+                console.log(docElement.innerHTML);
+            });
+        }
+    }
+
+
+    async function deleteUser() {
+        const id = document.getElementById("id").value
+        const response = await fetch(`docs/alltexts/${id}`, {
+            method: "DELETE",
+            headers: { "Accept": "application/json" }
+        });
+         if (response.ok) {
+                const data = await response.json();
+                document.getElementById("result").textContent = data.message;
+            }
+            else
+                console.log(response);
+    }
+
+</script>
 </body>
 </html>

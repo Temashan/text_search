@@ -1,4 +1,7 @@
-body {
-    background: #333; /* Цвет фона */
-    color: #fc0; /* Цвет текста */
-   }
+#divBackground{
+    background: linear-gradient(45deg, rgb(154, 207, 161), rgb(82, 133, 182));
+    padding: 10px;
+    margin: 0px;
+    width: 1356px;
+    height: 450px;
+}
